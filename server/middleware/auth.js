@@ -3,7 +3,7 @@ import User from '../models/User.js';
 
 export const authenticateToken = async (req, res, next) => {
     try {
-        // Get token from header
+        // Gauti tokeną iš antraštės
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
@@ -13,10 +13,10 @@ export const authenticateToken = async (req, res, next) => {
             });
         }
 
-        // Verify token
+        // Patikrinti tokeną
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        // Get user from database
+        // Gauti vartotoją iš duomenų bazės
         const user = await User.findById(decoded.userId);
         
         if (!user) {
@@ -25,7 +25,7 @@ export const authenticateToken = async (req, res, next) => {
             });
         }
 
-        // Add user to request object
+        // Pridėti vartotoją prie užklausos objekto
         req.user = user;
         next();
         

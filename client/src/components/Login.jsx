@@ -16,7 +16,7 @@ const Login = ({ onToggleForm }) => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    setError(''); // Clear error when user types
+    setError(''); // Išvalyti klaidą, kai vartotojas rašo
   };
 
   const handleSubmit = async (e) => {

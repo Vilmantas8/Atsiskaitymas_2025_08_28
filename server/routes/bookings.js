@@ -12,7 +12,7 @@ import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Validation rules for booking
+// Validacijos taisyklės rezervacijai
 const bookingValidation = [
     body('cinemaName')
         .trim()
@@ -60,7 +60,7 @@ const bookingValidation = [
         })
 ];
 
-// Update validation (all fields optional)
+// Atnaujinimo validacija (visi laukai neprivalomi)
 const updateBookingValidation = [
     body('cinemaName')
         .optional()
@@ -108,10 +108,10 @@ const updateBookingValidation = [
         .withMessage('Vietos numeris turi būti teigiamas skaičius / Seat number must be positive')
 ];
 
-// Apply authentication to all routes
+// Taikyti autentifikaciją visiems maršrutams
 router.use(authenticateToken);
 
-// Routes
+// Maršrutai
 router.get('/', getAllBookings);
 router.get('/available-seats', getAvailableSeats);
 router.get('/:id', getBookingById);

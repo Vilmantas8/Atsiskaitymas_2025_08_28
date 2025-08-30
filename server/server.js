@@ -3,11 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
-// Import routes
+// Importuoti maršrutus
 import authRoutes from './routes/auth.js';
 import bookingRoutes from './routes/bookings.js';
 
-// Load environment variables
+// Įkelti aplinkos kintamuosius
 dotenv.config();
 
 const app = express();
@@ -21,13 +21,13 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Simple logging middleware for development
+// Paprastas registro middleware kūrimui
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
     next();
 });
 
-// MongoDB connection
+// MongoDB ryšys
 const connectDB = async () => {
     try {
         await mongoose.connect(`${process.env.MONGODB_URI}/${process.env.DB_NAME}`, {
@@ -41,14 +41,14 @@ const connectDB = async () => {
     }
 };
 
-// Connect to database
+// Prisijungti prie duomenų bazės
 connectDB();
 
-// Routes
+// Maršrutai
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 
-// Basic test route
+// Pagrindinis testavimo maršrutas
 app.get('/api/test', (req, res) => {
     res.json({ 
         message: 'Serveris veikia! / Server is running!',
@@ -56,7 +56,7 @@ app.get('/api/test', (req, res) => {
     });
 });
 
-// 404 handler
+// 404 apdorojimo priemonė
 app.use('*', (req, res) => {
     res.status(404).json({ 
         message: 'Maršrutas nerastas / Route not found',
@@ -64,7 +64,7 @@ app.use('*', (req, res) => {
     });
 });
 
-// Error handling middleware
+// Klaidų apdorojimo middleware
 app.use((error, req, res, next) => {
     console.error('Server error:', error);
     res.status(500).json({ 

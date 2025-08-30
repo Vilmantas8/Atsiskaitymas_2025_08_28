@@ -2,10 +2,10 @@ import { validationResult } from 'express-validator';
 import User from '../models/User.js';
 import { generateToken } from '../middleware/auth.js';
 
-// Register new user
+// Registruoti naują vartotoją
 export const register = async (req, res) => {
     try {
-        // Check validation errors
+        // Patikrinti validacijos klaidas
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
@@ -16,7 +16,7 @@ export const register = async (req, res) => {
 
         const { username, email, password } = req.body;
 
-        // Check if user already exists
+        // Patikrinti, ar vartotojas jau egzistuoja
         const existingUser = await User.findOne({
             $or: [{ email }, { username }]
         });
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
             });
         }
 
-        // Create new user
+        // Sukurti naują vartotoją
         const user = new User({
             username,
             email,
@@ -37,7 +37,7 @@ export const register = async (req, res) => {
 
         await user.save();
 
-        // Generate token
+        // Generuoti tokeną
         const token = generateToken(user._id);
 
         res.status(201).json({
@@ -54,7 +54,7 @@ export const register = async (req, res) => {
     } catch (error) {
         console.error('Registration error:', error);
         
-        // Handle duplicate key error
+        // Apdoroti duplikato rakto klaidą
         if (error.code === 11000) {
             const field = Object.keys(error.keyPattern)[0];
             return res.status(400).json({
@@ -70,10 +70,10 @@ export const register = async (req, res) => {
     }
 };
 
-// Login user
+// Prisijungti vartotoją
 export const login = async (req, res) => {
     try {
-        // Check validation errors
+        // Patikrinti validacijos klaidas
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
@@ -84,7 +84,7 @@ export const login = async (req, res) => {
 
         const { email, password } = req.body;
 
-        // Find user by email
+        // Rasti vartotoją pagal el. paštą
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({
@@ -92,7 +92,7 @@ export const login = async (req, res) => {
             });
         }
 
-        // Check password
+        // Patikrinti slaptažodį
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
             return res.status(401).json({
@@ -100,7 +100,7 @@ export const login = async (req, res) => {
             });
         }
 
-        // Generate token
+        // Generuoti tokeną
         const token = generateToken(user._id);
 
         res.json({
@@ -123,7 +123,7 @@ export const login = async (req, res) => {
     }
 };
 
-// Get current user info
+// Gauti dabartinio vartotojo informaciją
 export const getMe = async (req, res) => {
     try {
         res.json({

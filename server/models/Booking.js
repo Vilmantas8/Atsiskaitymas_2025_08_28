@@ -57,10 +57,10 @@ const bookingSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true,
-    collection: 'cinematika' // Using the specified collection name
+    collection: 'cinematika' // Naudojant nurodytą kolekcijos pavadinimą
 });
 
-// Validate seat number doesn't exceed stage squares
+// Patikrinti, kad vietos numeris neviršytų scenos kvadratų
 bookingSchema.pre('save', function(next) {
     if (this.seatNumber > this.stageSquares) {
         const error = new Error('Vietos numeris negali viršyti bendro vietų skaičiaus / Seat number cannot exceed total seats');
@@ -69,7 +69,7 @@ bookingSchema.pre('save', function(next) {
     next();
 });
 
-// Create index for unique seat booking per cinema, date, and time
+// Sukurti indeksą unikaliai vietų rezervacijai pagal kino teatrą, datą ir laiką
 bookingSchema.index({ 
     cinemaName: 1, 
     date: 1, 

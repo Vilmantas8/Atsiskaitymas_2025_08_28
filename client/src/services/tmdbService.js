@@ -1,12 +1,12 @@
-// TMDB API Service
-// Register for free API key at: https://www.themoviedb.org/settings/api
+// TMDB API servisas
+// Registruokitės nemokamam API raktui: https://www.themoviedb.org/settings/api
 
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-// You need to register and get your own API key
-const TMDB_API_KEY = 'your-tmdb-api-key-here'; // Replace with actual API key
+// Jums reikia registruotis ir gauti savo API raktą
+const TMDB_API_KEY = 'your-tmdb-api-key-here'; // Pakeiskite tikru API raktu
 
 class TMDBService {
-  // Search for movies
+  // Ieškoti filmų
   async searchMovies(query, page = 1) {
     try {
       if (!query || query.length < 2) return { results: [] };
@@ -26,7 +26,7 @@ class TMDBService {
     }
   }
 
-  // Get popular movies
+  // Gauti populiarius filmus
   async getPopularMovies(page = 1) {
     try {
       const response = await fetch(
@@ -44,7 +44,7 @@ class TMDBService {
     }
   }
 
-  // Get movie details
+  // Gauti filmo detales
   async getMovieDetails(movieId) {
     try {
       const response = await fetch(
@@ -62,7 +62,7 @@ class TMDBService {
     }
   }
 
-  // Get now playing movies
+  // Gauti dabar rodomų filmų sąrašą
   async getNowPlayingMovies(page = 1) {
     try {
       const response = await fetch(
@@ -80,7 +80,7 @@ class TMDBService {
     }
   }
 
-  // Get upcoming movies
+  // Gauti būsimų filmų sąrašą
   async getUpcomingMovies(page = 1) {
     try {
       const response = await fetch(
@@ -98,13 +98,13 @@ class TMDBService {
     }
   }
 
-  // Helper method to get full image URL
+  // Pagalbinis metodas gauti pilną paveikslėlio URL
   getImageUrl(imagePath, size = 'w500') {
     if (!imagePath) return null;
     return `https://image.tmdb.org/t/p/${size}${imagePath}`;
   }
 
-  // Format movie data for our application
+  // Formatuoti filmo duomenis mūsų programai
   formatMovieForBooking(movie) {
     return {
       id: movie.id,
@@ -121,12 +121,12 @@ class TMDBService {
     };
   }
 
-  // Check if API key is configured
+  // Patikrinti, ar API raktas sukonfigūruotas
   isConfigured() {
     return TMDB_API_KEY && TMDB_API_KEY !== 'your-tmdb-api-key-here';
   }
 
-  // Get configuration info
+  // Gauti konfigūracijos informaciją
   getApiInfo() {
     return {
       configured: this.isConfigured(),
@@ -137,11 +137,11 @@ class TMDBService {
   }
 }
 
-// Create and export a singleton instance
+// Sukurti ir eksportuoti singleton egzempliorių
 const tmdbService = new TMDBService();
 export default tmdbService;
 
-// Alternative free movie data for development/testing
+// Alternatyvūs nemokamų filmų duomenys kūrimo/testavimo tikslams
 export const sampleMovieData = [
   {
     id: 1,

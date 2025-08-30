@@ -17,7 +17,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
   const [filteredCinemas, setFilteredCinemas] = useState([]);
   const cinemaInputRef = useRef(null);
 
-  // Cinema database with realistic data
+  // Kino teatrų duomenų bazė su realistiniais duomenimis
   const cinemaDatabase = [
     // Klaipėda
     { id: 1, name: 'Forum Cinemas Arena', city: 'Klaipėda', capacity: 900 },
@@ -44,7 +44,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
     { id: 14, name: 'Panevėžio Kino Teatras', city: 'Panevėžys', capacity: 380 }
   ];
 
-  // Generate seat options based on cinema capacity
+  // Generuoti vietų variantus pagal kino teatro talpą
   const generateSeatOptions = (capacity) => {
     const options = [];
     const baseOptions = [50, 100, 200, 300, 500, 800, 1000, 1500];
@@ -55,7 +55,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
       }
     });
     
-    // Add the exact capacity if it's not in the base options
+    // Pridėti tikslią talpą, jei jos nėra pagrindinių variantų sąraše
     if (!options.includes(capacity)) {
       options.push(capacity);
       options.sort((a, b) => a - b);
@@ -64,14 +64,14 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
     return options;
   };
 
-  // Generate cinema seat layout
+  // Generuoti kino salės vietų išdėstymą
   const generateSeatLayout = (totalSeats) => {
-    const seatsPerRow = 20; // Standard cinema row width
+    const seatsPerRow = 20; // Standartinis kino salės eilės plotis
     const rows = Math.ceil(totalSeats / seatsPerRow);
     const layout = [];
     
     for (let row = 0; row < rows; row++) {
-      const rowLetter = String.fromCharCode(65 + row); // A, B, C, etc.
+      const rowLetter = String.fromCharCode(65 + row); // A, B, C, ir t.t.
       const rowSeats = [];
       
       const seatsInThisRow = Math.min(seatsPerRow, totalSeats - (row * seatsPerRow));
@@ -91,26 +91,26 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
     return layout;
   };
 
-  // Handle seat selection
+  // Tvarkyti vietų pasirinkimą
   const handleSeatClick = (seatId) => {
     setFormData(prev => {
       const currentSelected = prev.selectedSeats || [];
       
       if (currentSelected.includes(seatId)) {
-        // Remove seat if already selected
+        // Pašalinti vietą, jei jau pasirinkta
         return {
           ...prev,
           selectedSeats: currentSelected.filter(seat => seat !== seatId)
         };
       } else {
-        // Add seat if not selected and within limit
+        // Pridėti vietą, jei nepasirinkta ir neviršija limito
         if (currentSelected.length < prev.stageSquares) {
           return {
             ...prev,
             selectedSeats: [...currentSelected, seatId]
           };
         } else {
-          // Show alert if limit exceeded
+          // Rodyti perspėjimą, jei viršytas limitas
           alert(`Maksimaliai galima pasirinkti ${prev.stageSquares} vietų`);
           return prev;
         }
@@ -118,7 +118,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
     });
   };
 
-  // SeatGrid Component
+  // SeatGrid komponentas
   const SeatGrid = ({ cinema, maxSeats, selectedSeats, onSeatClick }) => {
     if (!cinema) return null;
     
@@ -149,7 +149,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
                       disabled={isDisabled}
                       title={isSelected ? `Pasirinkta: ${seatId}` : `Pasirinkti: ${seatId}`}
                     >
-                      {seatId.slice(1)} {/* Show just the number */}
+                      {seatId.slice(1)} {/* Rodyti tik numerį */}
                     </button>
                   );
                 })}
@@ -176,16 +176,16 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
     );
   };
 
-  // Filter cinemas based on selected city and search term
+  // Filtruoti kino teatrus pagal pasirinktą miestą ir paieškos terminą
   useEffect(() => {
     let filtered = cinemaDatabase;
 
-    // Filter by selected city
+    // Filtruoti pagal pasirinktą miestą
     if (formData.city) {
       filtered = filtered.filter(cinema => cinema.city === formData.city);
     }
 
-    // Filter by search term
+    // Filtruoti pagal paieškos terminą
     if (formData.cinemaName) {
       filtered = filtered.filter(cinema =>
         cinema.name.toLowerCase().includes(formData.cinemaName.toLowerCase())
@@ -195,12 +195,12 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
     setFilteredCinemas(filtered);
   }, [formData.city, formData.cinemaName]);
 
-  // Monitor changes to selected cinema and ensure maximum capacity is selected
+  // Stebėti pasirinkto kino teatro keitimus ir užtikrinti maksimalią talpą
   useEffect(() => {
     if (formData.cinemaName && formData.city) {
       const cinema = cinemaDatabase.find(c => c.name === formData.cinemaName);
       
-      // Always ensure maximum capacity is selected when cinema changes
+      // Visada užtikrinti, kad būtų pasirinkta maksimali talpa, kai keičiasi kino teatras
       if (cinema && formData.stageSquares !== cinema.capacity) {
         setFormData(prev => ({
           ...prev,
@@ -210,89 +210,127 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
     }
   }, [formData.cinemaName, formData.city]);
 
-  // Handle city selection - automatically clear cinema selection
+  // Tvarkyti miesto pasirinkimą - automatiškai išvalyti kino teatro pasirinkimą
   const handleCityChange = (e) => {
     const selectedCity = e.target.value;
     setFormData(prev => ({
       ...prev,
       city: selectedCity,
-      cinemaName: '', // Clear cinema when city changes
-      stageSquares: 50 // Reset to default
+      cinemaName: '', // Išvalyti kino teatrą, kai keičiasi miestas
+      stageSquares: 50 // Atkurti į numatytąją reikšmę
     }));
     
-    // If city is selected, focus on cinema input for better UX
+    // Jei miestas pasirinktas, sukoncentruoti į kino teatro įvedimą geresniam UX
     if (selectedCity && cinemaInputRef.current) {
       setTimeout(() => cinemaInputRef.current.focus(), 100);
     }
   };
 
-  // Handle cinema input change and keyboard navigation
+  // Tvarkyti kino teatro įvedimo keitimą ir klaviatūros navigaciją
   const handleCinemaInputChange = (e) => {
     const value = e.target.value;
     setFormData(prev => ({ ...prev, cinemaName: value }));
     setShowCinemaSuggestions(true);
   };
 
-  // Handle keyboard navigation in cinema suggestions
+  // Tvarkyti klaviatūros navigaciją kino teatro pasiūlymuose
   const handleCinemaKeyDown = (e) => {
     if (e.key === 'Escape') {
       setShowCinemaSuggestions(false);
     }
-    // Add more keyboard navigation if needed
+    // Pridėti daugiau klaviatūros navigacijos, jei reikia
   };
 
-  // Handle cinema selection from suggestions
+  // Tvarkyti kino teatro pasirinkimą iš pasiūlymų
   const handleCinemaSelect = (cinema) => {
-    // Auto-select MAXIMUM capacity of the cinema
+    // Automatiškai pasirinkti MAKSIMALIĄ kino teatro talpą
     const defaultSeats = cinema.capacity;
     
-    // Use setTimeout to ensure state update happens properly
+    // Naudoti setTimeout, kad užtikrinti tinkamą būsenos atnaujinimą
     setTimeout(() => {
       setFormData(prev => ({
         ...prev,
         cinemaName: cinema.name,
         stageSquares: defaultSeats,
-        selectedSeats: [] // Clear selected seats when cinema changes
+        selectedSeats: [] // Išvalyti pasirinktas vietas, kai keičiasi kino teatras
       }));
     }, 0);
     
     setShowCinemaSuggestions(false);
     
-    // Remove focus from input
+    // Pašalinti fokusą nuo įvedimo
     if (cinemaInputRef.current) {
       cinemaInputRef.current.blur();
     }
   };
 
-  // Handle other form changes
+  // Generuoti laikų variantus (kas valandą nuo 10:00 iki 23:00)
+  const generateTimeOptions = () => {
+    const times = [];
+    for (let hour = 10; hour <= 23; hour++) {
+      const timeString = `${hour.toString().padStart(2, '0')}:00`;
+      times.push(timeString);
+    }
+    return times;
+  };
+
+  // Patikrinti, ar laikas praeityje (tik šiandienos atveju)
+  const isTimeInPast = (time, selectedDate) => {
+    if (!selectedDate || !time) return false;
+    
+    const today = new Date();
+    const selected = new Date(selectedDate);
+    
+    // Patikrinti tik jei pasirinkta šiandienos data
+    if (selected.toDateString() === today.toDateString()) {
+      const [hour] = time.split(':').map(Number);
+      const currentHour = today.getHours();
+      const currentMinutes = today.getMinutes();
+      
+      // Jei dabartinė valanda didesnė arba lygi, tai praeityje
+      if (hour < currentHour) return true;
+      if (hour === currentHour && currentMinutes > 30) return true; // Pridėti 30 min. buferį
+    }
+    
+    return false;
+  };
+
+  // Tvarkyti kitus formos keitimus
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Clear selected seats if seat capacity changes
+    // Išvalyti pasirinktas vietas, jei keičiasi vietų talpa
     if (name === 'stageSquares') {
       setFormData(prev => ({ 
         ...prev, 
         [name]: value,
-        selectedSeats: [] // Clear selected seats when capacity changes
+        selectedSeats: [] // Išvalyti pasirinktas vietas, kai keičiasi talpa
+      }));
+    } else if (name === 'date') {
+      // Išvalyti laiką, kai keičiasi data (nes gali keistis prieinami laikai)
+      setFormData(prev => ({ 
+        ...prev, 
+        [name]: value,
+        time: '' // Išvalyti laiką, kad vartotojas pasirinktų iš naujo
       }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  // Handle form submission
+  // Tvarkyti formos pateikimą
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Find selected cinema for additional data
+    // Rasti pasirinktą kino teatrą papildomoms duomenims
     const selectedCinema = cinemaDatabase.find(
       cinema => cinema.name === formData.cinemaName
     );
     
-    // Get selected seats count
+    // Gauti pasirinktų vietų skaičių
     const selectedSeatCount = formData.selectedSeats ? formData.selectedSeats.length : 0;
     
-    // Validate seat count
+    // Patikrinti vietų skaičių
     if (selectedSeatCount > formData.stageSquares) {
       alert(`Klaida: Pasirinkote ${selectedSeatCount} vietas, bet maksimaliai galima ${formData.stageSquares} vietų.`);
       return;
@@ -303,9 +341,19 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
       return;
     }
     
-    // Ensure date is properly formatted and in the future
-    if (new Date(formData.date) < new Date()) {
+    // Patikrinti datą ir laiką
+    const selectedDate = new Date(formData.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Nustatyti į dienos pradžią
+    
+    if (selectedDate < today) {
       alert('Negalima rezervuoti praeities datai. Pasirinkite ateities datą.');
+      return;
+    }
+    
+    // Patikrinti laiką, jei pasirinkta šiandienos data
+    if (isTimeInPast(formData.time, formData.date)) {
+      alert('Negalima rezervuoti praeities laikui. Pasirinkite vėlesnį laiką.');
       return;
     }
     
@@ -313,33 +361,33 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
       movieTitle: formData.movieTitle,
       cinemaName: formData.cinemaName,
       city: formData.city,
-      date: formData.date, // Send as is - backend will handle timezone
+      date: formData.date, // Siųsti kaip yra - backend tvarkys laiko juostą
       bookingTime: formData.time,
-      stageSquares: Math.min(formData.stageSquares, 500), // Cap at backend limit
+      stageSquares: Math.min(formData.stageSquares, 500), // Riboti backend limite
       seatNumber: selectedSeatCount,
       selectedSeats: formData.selectedSeats || [],
-      price: selectedSeatCount * 10, // 10€ per seat
+      price: selectedSeatCount * 10, // 10€ už vietą
       
-      // Additional fields for form compatibility
+      // Papildomi laukai formos suderinamumui
       selectedSeatsList: formData.selectedSeats || [],
       actualSeatCount: selectedSeatCount,
       cinemaCapacity: selectedCinema?.capacity || null,
       cinemaId: selectedCinema?.id || null
     };
     
-    // Check if onBookingCreated or onSubmit function is provided
+    // Patikrinti, ar pateikta onBookingCreated arba onSubmit funkcija
     const submitHandler = onBookingCreated || onSubmit;
     
     if (typeof submitHandler === 'function') {
       try {
         await submitHandler(submissionData);
         
-        // Show success message only if no custom handler
+        // Rodyti sėkmės pranešimą tik jei nėra pasirinktinio tvarkytojo
         if (!onBookingCreated && !onSubmit) {
           alert(`Rezervacija sėkmingai sukurta!\n\nKino teatras: ${formData.cinemaName}\nFilmas: ${formData.movieTitle}\nData: ${formData.date}\nLaikas: ${formData.time}\nPasirinktos vietos: ${formData.selectedSeats.join(', ')}\nViso vietų: ${selectedSeatCount}`);
         }
         
-        // Close form if onClose is provided
+        // Uždaryti formą, jei pateikta onClose
         if (typeof onClose === 'function') {
           onClose();
         }
@@ -349,13 +397,13 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
         alert('Įvyko klaida pateikiant formą. Patikrinkite duomenis ir bandykite dar kartą.');
       }
     } else {
-      // Default behavior if no submission handler is provided
+      // Numatytasis elgesys, jei nėra pateikimo tvarkytojo
       console.log('Reservation Data:', submissionData);
       alert(`Rezervacija sėkmingai sukurta!\n\nKino teatras: ${formData.cinemaName}\nFilmas: ${formData.movieTitle}\nData: ${formData.date}\nLaikas: ${formData.time}\nPasirinktos vietos: ${formData.selectedSeats.join(', ')}\nViso vietų: ${selectedSeatCount}`);
     }
   };
 
-  // Close suggestions when clicking outside
+  // Uždaryti pasiūlymus paspaudus už jų ribų
   useEffect(() => {
     const handleClickOutside = (event) => {
       const cinemaContainer = document.querySelector('.cinema-search-container');
@@ -368,14 +416,14 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Get current cinema capacity for seat options
+  // Gauti dabartinio kino teatro talpą vietų variantams
   const selectedCinema = cinemaDatabase.find(
     cinema => cinema.name === formData.cinemaName
   );
   
   const seatOptions = selectedCinema ? generateSeatOptions(selectedCinema.capacity) : [50, 100, 200, 300];
   
-  // Get current seat count for validation
+  // Gauti dabartinį vietų skaičių patikrinimui
   const currentSeatCount = formData.selectedSeats ? formData.selectedSeats.length : 0;
 
   return (
@@ -383,7 +431,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
       <h2>Kino Bilietų Rezervacija</h2>
       
       <form onSubmit={handleSubmit} className="booking-form">
-        {/* Movie Title */}
+        {/* Filmo pavadinimas */}
         <div className="form-group">
           <label htmlFor="movieTitle">Filmo pavadinimas:</label>
           <input
@@ -397,7 +445,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
           />
         </div>
 
-        {/* City Filter */}
+        {/* Miesto filtras */}
         <div className="form-group">
           <label htmlFor="cityFilter">Miestas (filtras):</label>
           <select 
@@ -415,7 +463,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
           </select>
         </div>
 
-        {/* Cinema Search with Autocomplete */}
+        {/* Kino teatro paieška su automatiškai baigiamu tekstu */}
         <div className="form-group cinema-search-container" style={{ position: 'relative' }}>
           <label htmlFor="cinemaName">Kino teatras:</label>
           <input
@@ -437,7 +485,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
             className={!formData.city ? 'disabled-input' : ''}
           />
 
-          {/* Cinema Suggestions Dropdown */}
+          {/* Kino teatro pasiūlymų išskleidžiamasis sąrašas */}
           {showCinemaSuggestions && filteredCinemas.length > 0 && (
             <div className="cinema-suggestions" style={{
               position: 'absolute',
@@ -463,7 +511,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
                     handleCinemaSelect(cinema);
                   }}
                   onMouseDown={(e) => {
-                    e.preventDefault(); // Prevent input blur
+                    e.preventDefault(); // Apsaugoti nuo įvedimo blur
                   }}
                   style={{
                     padding: '12px 16px',
@@ -496,7 +544,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
             </div>
           )}
 
-          {/* No results message */}
+          {/* Pranešimas, kad nėra rezultatų */}
           {showCinemaSuggestions && formData.cinemaName && filteredCinemas.length === 0 && (
             <div className="no-results" style={{
               position: 'absolute',
@@ -517,7 +565,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
           )}
         </div>
 
-        {/* Cinema Info Display */}
+        {/* Kino teatro informacijos rodymas */}
         {selectedCinema && (
           <div className="cinema-info" style={{
             padding: '12px',
@@ -547,7 +595,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
           </div>
         )}
 
-        {/* Date */}
+        {/* Data */}
         <div className="form-group">
           <label htmlFor="date">Data:</label>
           <input
@@ -557,27 +605,48 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
             value={formData.date}
             onChange={handleChange}
             required
-            min={new Date().toISOString().split('T')[0]} // Prevent past dates
+            min={new Date().toISOString().split('T')[0]} // Apsaugoti nuo praeities datų
           />
           <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
             Galite pasirinkti tik ateities datas
           </div>
         </div>
 
-        {/* Time */}
+        {/* Laikas */}
         <div className="form-group">
-          <label htmlFor="time">Laikas:</label>
-          <input
-            type="time"
+          <label htmlFor="time">Seansų laikas:</label>
+          <select
             id="time"
             name="time"
             value={formData.time}
             onChange={handleChange}
             required
-          />
+            className={!formData.date ? 'disabled-input' : ''}
+            disabled={!formData.date}
+          >
+            <option value="">Pasirinkite seansą</option>
+            {generateTimeOptions().map(time => {
+              const isPastTime = isTimeInPast(time, formData.date);
+              return (
+                <option 
+                  key={time} 
+                  value={time}
+                  disabled={isPastTime}
+                  style={{ color: isPastTime ? '#ccc' : 'inherit' }}
+                >
+                  {time} {isPastTime ? '(praeityje)' : ''}
+                </option>
+              );
+            })}
+          </select>
+          {!formData.date && (
+            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>  
+              Pirmiau pasirinkite datą
+            </div>
+          )}
         </div>
 
-        {/* Dynamic Seat Selection */}
+        {/* Dinamiškas vietų pasirinkimas */}
         <div className="form-group">
           <label htmlFor="stageSquares">Vietų skaičius:</label>
           <select
@@ -608,7 +677,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
           )}
         </div>
 
-        {/* Interactive Seat Selection Grid */}
+        {/* Interaktyvus vietų pasirinkimo tinklelis */}
         <div className="form-group">
           <label>Prašome pasirinkti laisvą (-as) sėdimas vietas:</label>
           
@@ -682,7 +751,7 @@ const EnhancedBookingForm = ({ onSubmit = null, onBookingCreated = null, onClose
           )}
         </div>
 
-        {/* Submit Button */}
+        {/* Pateikimo mygtukas */}
         <div className="form-group">
           <button 
             type="submit" 

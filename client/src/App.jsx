@@ -6,7 +6,7 @@ import EnhancedBookingForm from './components/EnhancedBookingForm';
 import BookingList from './components/BookingList';
 import apiService from './services/api';
 
-// Main dashboard component for authenticated users
+// Pagrindinis dashboard komponentas autentifikuotiems vartotojams
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [currentView, setCurrentView] = useState('list'); // 'list', 'create', 'edit'
@@ -27,7 +27,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error creating booking:', error);
       alert('Nepavyko sukurti rezervacijos: ' + (error.message || 'Bandykite dar kartą.'));
-      throw error; // Re-throw so the form knows there was an error
+      throw error; // Išmeskite iš naujo, kad forma žinotų, jog įvyko klaida
     }
   };
 
@@ -44,7 +44,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* Navigation */}
+      {/* Navigacija */}
       <nav>
         <div className="container">
           <ul>
@@ -65,7 +65,7 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      {/* Main navigation buttons */}
+      {/* Pagrindiniai navigacijos mygtukai */}
       <div className="container">
         <div style={{ marginBottom: '30px', textAlign: 'center' }}>
           <button 
@@ -87,7 +87,7 @@ const Dashboard = () => {
           </button>
         </div>
 
-        {/* Content based on current view */}
+        {/* Turinys pagal dabartinį vaizdą */}
         {currentView === 'list' && (
           <BookingList 
             onEditBooking={handleEditBooking}
@@ -114,7 +114,7 @@ const Dashboard = () => {
   );
 };
 
-// Auth wrapper component
+// Auth wrapper komponentas
 const AuthWrapper = () => {
   const { user, isLoading } = useAuth();
   const [isLoginForm, setIsLoginForm] = useState(true);
@@ -174,7 +174,7 @@ const AuthWrapper = () => {
   return <Dashboard />;
 };
 
-// Main App component
+// Pagrindinis App komponentas
 const App = () => {
   return (
     <AuthProvider>

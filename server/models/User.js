@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     collection: 'users'
 });
 
-// Hash password before saving
+// Užšifruoti slaptažodį prieš išsaugojimą
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
     
@@ -45,12 +45,12 @@ userSchema.pre('save', async function(next) {
     }
 });
 
-// Compare password method
+// Slaptažodžio palyginimo metodas
 userSchema.methods.comparePassword = async function(candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Remove password from JSON output
+// Pašalinti slaptažodį iš JSON išvesties
 userSchema.methods.toJSON = function() {
     const user = this.toObject();
     delete user.password;

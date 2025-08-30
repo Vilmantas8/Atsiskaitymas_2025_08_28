@@ -1,17 +1,17 @@
 import { validationResult } from 'express-validator';
 import Booking from '../models/Booking.js';
 
-// Get all bookings for the current user
+// Gauti visas dabartinio vartotojo rezervacijas
 export const getAllBookings = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        // Get query parameters for filtering
+        // Gauti užklausos parametrus filtravimui
         const { cinemaName, date, status } = req.query;
         
-        // Build filter object
+        // Sukurti filtro objektą
         let filter = { userId: req.user._id };
         if (cinemaName) filter.cinemaName = new RegExp(cinemaName, 'i');
         if (date) filter.date = new Date(date);
@@ -45,7 +45,7 @@ export const getAllBookings = async (req, res) => {
     }
 };
 
-// Get single booking by ID
+// Gauti vieną rezervaciją pagal ID
 export const getBookingById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -75,10 +75,10 @@ export const getBookingById = async (req, res) => {
     }
 };
 
-// Create new booking
+// Sukurti naują rezervaciją
 export const createBooking = async (req, res) => {
     try {
-        // Check validation errors
+        // Patikrinti validacijos klaidas
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
@@ -89,7 +89,7 @@ export const createBooking = async (req, res) => {
 
         const { cinemaName, date, price, bookingTime, stageSquares, seatNumber } = req.body;
 
-        // Check if seat is already booked for the same cinema, date, and time
+        // Patikrinti, ar vieta jau rezervuota tam pačiam kino teatrui, datai ir laikui
         const existingBooking = await Booking.findOne({
             cinemaName,
             date: new Date(date),
@@ -104,7 +104,7 @@ export const createBooking = async (req, res) => {
             });
         }
 
-        // Create new booking
+        // Sukurti naują rezervaciją
         const booking = new Booking({
             cinemaName,
             date: new Date(date),
@@ -126,7 +126,7 @@ export const createBooking = async (req, res) => {
     } catch (error) {
         console.error('Create booking error:', error);
         
-        // Handle duplicate booking
+        // Apdoroti dubliuotą rezervaciją
         if (error.code === 11000) {
             return res.status(400).json({
                 message: 'Ši vieta jau užimta / This seat is already taken'
@@ -140,10 +140,10 @@ export const createBooking = async (req, res) => {
     }
 };
 
-// Update booking
+// Atnaujinti rezervaciją
 export const updateBooking = async (req, res) => {
     try {
-        // Check validation errors
+        // Patikrinti validacijos klaidas
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
@@ -155,7 +155,7 @@ export const updateBooking = async (req, res) => {
         const { id } = req.params;
         const { cinemaName, date, price, bookingTime, stageSquares, seatNumber } = req.body;
 
-        // Find existing booking
+        // Rasti esamą rezervaciją
         const booking = await Booking.findOne({ _id: id, userId: req.user._id });
         
         if (!booking) {
@@ -164,7 +164,7 @@ export const updateBooking = async (req, res) => {
             });
         }
 
-        // If changing seat or time, check for conflicts
+        // Jei keičiama vieta ar laikas, patikrinti konfliktus
         if (seatNumber !== booking.seatNumber || 
             bookingTime !== booking.bookingTime || 
             date !== booking.date.toISOString().split('T')[0] ||
@@ -186,7 +186,7 @@ export const updateBooking = async (req, res) => {
             }
         }
 
-        // Update booking
+        // Atnaujinti rezervaciją
         const updatedBooking = await Booking.findByIdAndUpdate(
             id,
             {
@@ -214,7 +214,7 @@ export const updateBooking = async (req, res) => {
     }
 };
 
-// Delete booking
+// Ištrinti rezervaciją
 export const deleteBooking = async (req, res) => {
     try {
         const { id } = req.params;
@@ -244,7 +244,7 @@ export const deleteBooking = async (req, res) => {
     }
 };
 
-// Get available seats for a specific showing
+// Gauti laisvas vietas konkrečiam seansui
 export const getAvailableSeats = async (req, res) => {
     try {
         const { cinemaName, date, bookingTime, stageSquares } = req.query;
@@ -255,7 +255,7 @@ export const getAvailableSeats = async (req, res) => {
             });
         }
 
-        // Get all booked seats for this showing
+        // Gauti visas rezervuotas vietas šiam seansui
         const bookedSeats = await Booking.find({
             cinemaName,
             date: new Date(date),

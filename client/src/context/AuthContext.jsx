@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is logged in on app start
+  // Patikrinti, ar vartotojas prisijungęs programos paleisties metu
   useEffect(() => {
     const checkAuth = async () => {
       const savedToken = localStorage.getItem('token');
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
             setUser(data.user);
             setToken(savedToken);
           } else {
-            // Token is invalid, remove it
+            // Tokenas neteisingas, pašalinti jį
             localStorage.removeItem('token');
             setToken(null);
           }

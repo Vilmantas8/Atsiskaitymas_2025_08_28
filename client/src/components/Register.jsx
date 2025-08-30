@@ -18,7 +18,7 @@ const Register = ({ onToggleForm }) => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Clear specific field error when user types
+    // Išvalyti konkretaus lauko klaidą, kai vartotojas rašo
     if (errors[e.target.name]) {
       setErrors({
         ...errors,
@@ -52,7 +52,7 @@ const Register = ({ onToggleForm }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
+    // Validuoti formą
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);

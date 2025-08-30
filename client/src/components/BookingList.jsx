@@ -20,7 +20,7 @@ const BookingList = ({ onEditBooking, refreshTrigger }) => {
     setError('');
     
     try {
-      // Remove empty filter values
+      // Pašalinti tuščias filtro reikšmes
       const filterParams = {};
       Object.keys(filter).forEach(key => {
         if (filter[key]) {
@@ -85,7 +85,7 @@ const BookingList = ({ onEditBooking, refreshTrigger }) => {
         </div>
       )}
 
-      {/* Filters */}
+      {/* Filtrai */}
       <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '4px' }}>
         <h3>Filtrai</h3>
         

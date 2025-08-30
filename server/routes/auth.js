@@ -5,7 +5,7 @@ import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Validation rules
+// Validacijos taisyklės
 const registerValidation = [
     body('username')
         .trim()
@@ -35,7 +35,7 @@ const loginValidation = [
         .withMessage('Slaptažodis būtinas')
 ];
 
-// Routes
+// Maršrutai
 router.post('/register', registerValidation, register);
 router.post('/login', loginValidation, login);
 router.get('/me', authenticateToken, getMe);

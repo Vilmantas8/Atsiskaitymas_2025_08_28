@@ -1,7 +1,7 @@
 const API_BASE_URL = 'http://localhost:5000/api';
 
 class ApiService {
-  // Helper method to get auth headers
+  // Pagalbinis metodas gauti auth antraštes
   getAuthHeaders() {
     const token = localStorage.getItem('token');
     return {
@@ -10,7 +10,7 @@ class ApiService {
     };
   }
 
-  // Helper method to handle API responses
+  // Pagalbinis metodas tvarkyti API atsakymus
   async handleResponse(response) {
     const data = await response.json();
     
@@ -21,7 +21,7 @@ class ApiService {
     return data;
   }
 
-  // Auth endpoints
+  // Auth galutiniai taškai
   async register(userData) {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
@@ -54,7 +54,7 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-  // Booking endpoints
+  // Rezervacijų galutiniai taškai
   async getAllBookings(params = {}) {
     const searchParams = new URLSearchParams(params);
     const response = await fetch(`${API_BASE_URL}/bookings?${searchParams}`, {

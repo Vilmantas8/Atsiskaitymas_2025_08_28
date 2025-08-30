@@ -16,13 +16,13 @@ const BookingForm = ({ booking, onClose, onBookingCreated, onBookingUpdated }) =
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Initialize form with booking data if editing
+  // Inicializuoti formą su rezervacijos duomenimis jei redaguojama
   useEffect(() => {
     if (booking) {
       const bookingDate = new Date(booking.date);
       setFormData({
         cinemaName: booking.cinemaName,
-        date: bookingDate.toISOString().split('T')[0], // Format for date input
+        date: bookingDate.toISOString().split('T')[0], // Formatuoti datos įvedimui
         price: booking.price,
         bookingTime: booking.bookingTime,
         stageSquares: booking.stageSquares,
@@ -40,7 +40,7 @@ const BookingForm = ({ booking, onClose, onBookingCreated, onBookingUpdated }) =
     setSuccess('');
   };
 
-  // Load available seats when cinema, date, time, or stageSquares change
+  // Įkelti laisvas vietas, kai pasikeičia kino teatras, data, laikas arba scenos aikštės
   useEffect(() => {
     const loadAvailableSeats = async () => {
       if (formData.cinemaName && formData.date && formData.bookingTime && formData.stageSquares) {
@@ -62,7 +62,7 @@ const BookingForm = ({ booking, onClose, onBookingCreated, onBookingUpdated }) =
       }
     };
 
-    // Don't load seats immediately on mount when editing
+    // Neįkelti vietų iš karto paleidimo metu, kai redaguojama
     if (!booking || (formData.cinemaName && formData.date && formData.bookingTime)) {
       loadAvailableSeats();
     }
@@ -76,17 +76,17 @@ const BookingForm = ({ booking, onClose, onBookingCreated, onBookingUpdated }) =
 
     try {
       if (booking) {
-        // Update existing booking
+        // Atnaujinti esamą rezervaciją
         const response = await apiService.updateBooking(booking._id, formData);
         setSuccess('Rezervacija atnaujinta!');
         onBookingUpdated && onBookingUpdated(response.booking);
       } else {
-        // Create new booking
+        // Sukurti naują rezervaciją
         const response = await apiService.createBooking(formData);
         setSuccess('Rezervacija sukurta!');
         onBookingCreated && onBookingCreated(response.booking);
         
-        // Reset form for new booking
+        // Atkurti formą naujai rezervacijai
         setFormData({
           cinemaName: '',
           date: '',

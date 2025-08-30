@@ -1,4 +1,4 @@
-// Lithuanian Cinema Data
+// Lietuvos kino teatrų duomenys
 export const lithuanianCinemas = [
   // Vilnius
   {
@@ -110,7 +110,7 @@ export const lithuanianCinemas = [
   }
 ];
 
-// Popular movie genres in Lithuanian
+// Populiarūs filmų žanrai lietuviškai
 export const movieGenres = [
   { id: 28, name: 'Veiksmo' },
   { id: 12, name: 'Nuotykių' },
@@ -133,12 +133,12 @@ export const movieGenres = [
   { id: 37, name: 'Vesternų' }
 ];
 
-// Common showtimes
+// Įprasti seansų laikai
 export const commonShowtimes = [
   '10:00', '12:30', '15:00', '17:30', '20:00', '20:30', '21:00', '21:30', '22:00'
 ];
 
-// Age ratings used in Lithuania
+// Amžiaus reitingai naudojami Lietuvoje
 export const ageRatings = [
   { code: 'N7', description: 'Nuo 7 metų' },
   { code: 'N13', description: 'Nuo 13 metų' },
@@ -146,7 +146,7 @@ export const ageRatings = [
   { code: 'N18', description: 'Nuo 18 metų' }
 ];
 
-// Helper functions
+// Pagalbinės funkcijos
 export const getCinemasByCity = (city) => {
   return lithuanianCinemas.filter(cinema => 
     city ? cinema.city.toLowerCase() === city.toLowerCase() : true
