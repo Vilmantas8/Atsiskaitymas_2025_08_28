@@ -255,6 +255,6 @@ Aplikacija pilnai palaiko **lietuvių kalbą**:
 ##  Saugumo Funkcijos
 
 - JWT token autentifikacija
-- Įvesties validacija (express-validator)
-- MongoDB injekcijos prevencija
+- Įvesties validacija
+  
 
